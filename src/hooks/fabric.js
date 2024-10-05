@@ -38,3 +38,39 @@ export function useLayerClick(canvas) {
         };
     }, [canvas]);
 }
+
+/**
+ * 
+ * @param {fabric.Canvas} canvas 
+ */
+export function useFabricMouse(canvas) {
+    const isDown = useRef(false);
+    const handler = { mouseDown: () => { }, mouseUp: () => { }, mouseMove: () => { } };
+    const setHandler = (key, fn) => {
+        handler[key] = fn;
+    };
+    useEffect(() => {
+        if (!canvas) return;
+        const handleMouseDown = (event) => {
+            handler.mouseDown(event);
+            isDown.current = true;
+        };
+        const handleMouseUp = (event) => {
+            handler.mouseUp(event);
+            isDown.current = false;
+        };
+        const handleMouseMove = (event) => {
+            if (!isDown.current) return;
+            handler.mouseMove(event);
+        };
+        canvas.on('mouse:down', handleMouseDown);
+        canvas.on('mouse:up', handleMouseUp);
+        canvas.on('mouse:move', handleMouseMove);
+        return () => {
+            canvas.off('mouse:down', handleMouseDown);
+            canvas.off('mouse:up', handleMouseUp);
+            canvas.off('mouse:move', handleMouseMove);
+        };
+    }, [canvas]);
+    return setHandler;
+}

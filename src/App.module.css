@@ -1,0 +1,14 @@
+.canvas-container {
+    position: relative;
+}
+
+.toolbar-container {
+    position: absolute;
+    width: 100%;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
