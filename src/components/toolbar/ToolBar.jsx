@@ -1,6 +1,6 @@
 import { Button } from 'antd';
 import { container } from './ToolBar.module.css';
-import { toolBarConfig, toolBarKeys } from './config.js';
+import { toolBarConfig, toolBarKeys, menuBarConfig, menuBarKeys } from './config.js';
 import { useState } from 'react';
 
 /**
@@ -15,12 +15,20 @@ export function ToolBar({ canvas }) {
         });
     }
 
+    const handleMenuClick = (key) => {
+        menuBarConfig[key].handler(canvas, canvas.getActiveObject());
+    }
+
     return (
         <div className={container}>
             {toolBarKeys.map((key) => {
                 const Icon = toolBarConfig[key].icon;
                 const isSelected = selectedTool === key;
-                return <Button icon={<Icon />} type='text' onClick={() => handleClick(key)} key={key} style={{ backgroundColor: isSelected ? '#007be5' : 'transparent', color: isSelected ? 'white' : 'black' }} />
+                return <Button icon={<Icon />} type='text' onClick={() => handleClick(key)} key={key} style={isSelected ? { backgroundColor:  '#007be5', color: 'white'} : {}} />
+            })}
+            {menuBarKeys.map((key) => {
+                const Icon = menuBarConfig[key].icon;
+                return <Button icon={<Icon />} type='text' onClick={() => handleMenuClick(key)} key={key} />
             })}
         </div>
     );

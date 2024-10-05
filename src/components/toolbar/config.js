@@ -1,5 +1,5 @@
-import { startAddingRect, startAddingText, startSelecting, startFreeDrawing } from "@/fabric/index.js";
-import { FontSizeOutlined, BorderOutlined, EditOutlined, DragOutlined } from '@ant-design/icons';
+import { startAddingRect, startAddingText, startSelecting, startFreeDrawing, deleteObject, clearCanvas } from "@/fabric/index.js";
+import { FontSizeOutlined, BorderOutlined, EditOutlined, DragOutlined, DeleteOutlined, ClearOutlined } from '@ant-design/icons';
 export const toolBarConfig = {
     select: {
         icon: DragOutlined,
@@ -19,4 +19,15 @@ export const toolBarConfig = {
     }
 }
 
+export const menuBarConfig = {
+    delete: {
+        icon: DeleteOutlined,
+        handler: deleteObject
+    },
+    clear: {
+        icon: ClearOutlined,
+        handler: clearCanvas
+    }
+}
 export const toolBarKeys = Object.keys(toolBarConfig);
+export const menuBarKeys = Object.keys(menuBarConfig);

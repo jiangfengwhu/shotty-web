@@ -1,8 +1,8 @@
-import * as fabric from 'fabric';
+import { FabricImage ,Canvas, Rect, Textbox, InteractiveFabricObject, PencilBrush} from 'fabric';
 
 function initFabric() {
-    fabric.InteractiveFabricObject.ownDefaults = {
-        ...fabric.InteractiveFabricObject.ownDefaults,
+    InteractiveFabricObject.ownDefaults = {
+        ...InteractiveFabricObject.ownDefaults,
         cornerStyle: 'circle',
         cornerStrokeColor: 'blue',
         cornerColor: 'lightblue',
@@ -15,7 +15,7 @@ function initFabric() {
 }
 
 /**
- * @param {fabric.Canvas} canvas 
+ * @param {Canvas} canvas 
  */
 function resizeCanvas(canvas) {
     if (canvas) {
@@ -34,7 +34,7 @@ function offAllMouseHandler(canvas) {
 }
 
 /**
- * @param {fabric.Canvas} canvas 
+ * @param {Canvas} canvas 
  */
 function _handleMouseMoveOnAdding(canvas, e, object, startPoint) {
     const pointer = canvas.getViewportPoint(e);
@@ -47,10 +47,10 @@ function _handleMouseMoveOnAdding(canvas, e, object, startPoint) {
 }
 
 /**
- * @param {fabric.Point} pointer 
+ * @param {Point} pointer 
  */
 function createRectAtPointer(pointer) {
-    return new fabric.Rect({
+    return new Rect({
         left: pointer.x,
         top: pointer.y,
         width: 0,
@@ -60,10 +60,10 @@ function createRectAtPointer(pointer) {
 }
 
 /**
- * @param {fabric.Point} pointer 
+ * @param {Point} pointer 
  */
 function createTextAtPointer(pointer) {
-    return new fabric.Textbox('', {
+    return new Textbox('', {
         left: pointer.x,
         top: pointer.y,
         fontSize: 20,
@@ -74,7 +74,7 @@ function createTextAtPointer(pointer) {
 }
 
 /**
- * @param {fabric.Canvas} canvas 
+ * @param {Canvas} canvas 
  */
 function startAddingRect(canvas, afterAddCb) {
     startAdding(canvas, {
@@ -85,7 +85,7 @@ function startAddingRect(canvas, afterAddCb) {
 }
 
 /**
- * @param {fabric.Canvas} canvas 
+ * @param {Canvas} canvas 
  */
 function startAddingText(canvas, afterAddCb) {
     startAdding(canvas, {
@@ -99,8 +99,8 @@ function startAddingText(canvas, afterAddCb) {
 }
 
 /**
- * @param {fabric.Canvas} canvas 
- * @param {{ creator: (pointer: fabric.Point) => fabric.Object, postCreator?: (object: fabric.Object) => void, cursor?: string }} options 
+ * @param {Canvas} canvas 
+ * @param {{ creator: (pointer: Point) => Object, postCreator?: (object: Object) => void, cursor?: string }} options 
  */
 function startAdding(canvas, { creator, postCreator, cursor = "default" }) {
     offAllMouseHandler(canvas);
@@ -141,14 +141,42 @@ function startSelecting(canvas) {
 }
 
 /**
- * @param {fabric.Canvas} canvas 
+ * @param {Canvas} canvas 
  */
 function startFreeDrawing(canvas) {
     offAllMouseHandler(canvas);
     canvas.isDrawingMode = true;
-    canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+    canvas.freeDrawingBrush = new PencilBrush(canvas);
     canvas.freeDrawingBrush.width = 5;
     canvas.freeDrawingBrush.color = '#000000';
+}
+
+/**
+ * @param {Canvas} canvas 
+ * @param {Object} object 
+ */
+function deleteObject(canvas, object) {
+    canvas.remove(object);
+}
+
+/**
+ * @param {Canvas} canvas 
+ * @param {string} base64 
+ */
+async function addBase64Image(canvas, base64) {
+    const img = await FabricImage.fromURL(base64);
+    if (img.width > canvas.width) {
+        img.scaleToWidth(canvas.width - 20);
+    }
+    canvas.add(img);
+    canvas.centerObject(img);
+}
+
+/**
+ * @param {Canvas} canvas 
+ */
+function clearCanvas(canvas) {
+    canvas.clear();
 }
 
 export {
@@ -157,5 +185,8 @@ export {
     startAddingRect,
     startAddingText,
     startSelecting,
-    startFreeDrawing
+    startFreeDrawing,
+    deleteObject,
+    addBase64Image,
+    clearCanvas
 }
