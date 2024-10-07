@@ -1,5 +1,12 @@
 import { useEffect } from "react";
 import { message } from "antd";
+function getCanvasBlob(canvas) {
+    return new Promise(function(resolve, reject) {
+      canvas.toBlob(function(blob) {
+        resolve(blob)
+      })
+    })
+}
 /**
  * @param {fabric.Canvas} canvas 
  */
@@ -14,12 +21,13 @@ export function useCanvasSave(canvas) {
             message.success('导出成功');
         } else if (e.metaKey && e.key === 'c') {
             e.preventDefault();
-            canvas.getElement().toBlob((blob) => {
-                navigator.clipboard.write([
-                    new ClipboardItem({ "image/png": blob })
-                ]);
+            navigator.clipboard.write([
+                new ClipboardItem({ "image/png": getCanvasBlob(canvas.getElement()) })
+            ]).then(() => {
                 message.success('复制成功');
-            }, "image/png");
+            }).catch((err) => {
+                message.error('复制失败');
+            });
         }
     }
     useEffect(() => {
