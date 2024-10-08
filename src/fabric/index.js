@@ -1,13 +1,15 @@
 import { FabricImage ,Canvas, Rect, Textbox, InteractiveFabricObject, PencilBrush} from 'fabric';
+import { DEFAULT_COLOR } from '@/constants';
 
+let cleaner = null;
 function initFabric() {
     InteractiveFabricObject.ownDefaults = {
         ...InteractiveFabricObject.ownDefaults,
         cornerStyle: 'circle',
         cornerStrokeColor: 'blue',
         cornerColor: 'lightblue',
-        padding: 10,
-        cornerSize: 8,
+        padding: 2,
+        cornerSize: 6,
         transparentCorners: false,
         borderColor: 'orange',
         borderScaleFactor: 2,
@@ -28,9 +30,9 @@ function resizeCanvas(canvas) {
 function offAllMouseHandler(canvas) {
     canvas.defaultCursor = 'default';
     canvas.isDrawingMode = false;
-    canvas.off('mouse:down');
-    canvas.off('mouse:move');
-    canvas.off('mouse:up');
+    if (cleaner) {
+        cleaner();
+    }
 }
 
 /**
@@ -55,7 +57,11 @@ function createRectAtPointer(pointer) {
         top: pointer.y,
         width: 0,
         height: 0,
-        fill: 'rgba(255,0,0,0.5)'
+        fill: 'rgba(255,0,0,0)',
+        rx: 10,
+        ry: 10,
+        strokeWidth: 4,
+        stroke: 'rgba(255,0,0,1)',
     });
 }
 
@@ -112,19 +118,17 @@ function startAdding(canvas, { creator, postCreator, cursor = "default" }) {
     canvas.defaultCursor = cursor;
     let object;
     let startPoint;
-    canvas.once('mouse:down', (o) => {
+    const onDown = (o) => {
         isDown = true;
         startPoint = canvas.getViewportPoint(o.e);
         object = creator(startPoint);
         canvas.add(object);
-    });
+    }
     const onMove = (e) => {
         if (!isDown) return;
         _handleMouseMoveOnAdding(canvas, e, object, startPoint);
     };
-    canvas.on('mouse:move', onMove);
-
-    canvas.once('mouse:up', () => {
+    const onUp = () => {
         isDown = false;
         canvas.setActiveObject(object);
         canvas.defaultCursor = 'default';
@@ -133,7 +137,16 @@ function startAdding(canvas, { creator, postCreator, cursor = "default" }) {
             obj.selectable = true;
         });
         postCreator?.(object);
-    });
+    }
+
+    canvas.once('mouse:down', onDown);
+    canvas.on('mouse:move', onMove);
+    canvas.once('mouse:up', onUp);
+    cleaner = () => {
+        canvas.off('mouse:down', onDown);
+        canvas.off('mouse:move', onMove);
+        canvas.off('mouse:up', onUp);
+    }
 }
 
 function startSelecting(canvas) {
@@ -148,7 +161,7 @@ function startFreeDrawing(canvas) {
     canvas.isDrawingMode = true;
     canvas.freeDrawingBrush = new PencilBrush(canvas);
     canvas.freeDrawingBrush.width = 5;
-    canvas.freeDrawingBrush.color = '#000000';
+    canvas.freeDrawingBrush.color = DEFAULT_COLOR;
 }
 
 /**
@@ -179,6 +192,33 @@ function clearCanvas(canvas) {
     canvas.clear();
 }
 
+/**
+ * @param {Canvas} canvas 
+ * @param {Object} object 
+ */
+function bringToFront(canvas, object) {
+    canvas.bringObjectForward(object);
+}
+
+/**
+ * @param {Canvas} canvas 
+ * @param {Object} object 
+ */
+function sendToBack(canvas, object) {
+    canvas.sendObjectBackwards(object);
+}
+
+/**
+ * @param {Canvas} canvas 
+ * @param {Object} object 
+ */
+function fillColor(canvas, object, color, type = "fill") {
+    object.set({
+        [type]: color
+    });
+    canvas.renderAll();
+}
+
 export {
     initFabric,
     resizeCanvas,
@@ -188,5 +228,8 @@ export {
     startFreeDrawing,
     deleteObject,
     addBase64Image,
-    clearCanvas
+    clearCanvas,
+    bringToFront,
+    sendToBack,
+    fillColor
 }

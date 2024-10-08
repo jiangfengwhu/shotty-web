@@ -20,10 +20,7 @@ export const toolBarConfig = {
 }
 
 export const menuBarConfig = {
-    delete: {
-        icon: DeleteOutlined,
-        handler: deleteObject
-    },
+    
     clear: {
         icon: ClearOutlined,
         handler: clearCanvas

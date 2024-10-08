@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { resizeCanvas } from '../fabric/index.js';
-
+import { updateQuickBar } from '../store/index.js';
 /**
  * 
  * @param {fabric.Canvas} canvas 
@@ -73,4 +73,39 @@ export function useFabricMouse(canvas) {
         };
     }, [canvas]);
     return setHandler;
+}
+
+
+/**
+ * @param {fabric.Canvas} canvas 
+ */
+export function useQuickBar(canvas) {
+    useEffect(() => {
+        if (!canvas) return;
+        const updater = (e) => {
+            const activeObject = canvas.getActiveObject();
+            console.log('zxzx activeObject', activeObject)
+            if (!activeObject) return;
+            const { left, top, height , scaleY} = activeObject;
+            const quickBar = {
+                left,
+                top: top + height *scaleY,
+                visible: true,
+                type: activeObject.get('type')
+            }
+            updateQuickBar(quickBar)
+        }
+        const dismiss = () => {
+            updateQuickBar({
+                visible: false
+            })
+        }
+        canvas.on('mouse:down', dismiss)
+        canvas.on('mouse:up', updater)
+
+        return () => {
+            canvas.off('mouse:down', dismiss)
+            canvas.off('mouse:up', updater)
+        }
+    }, [canvas])
 }
