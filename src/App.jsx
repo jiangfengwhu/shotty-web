@@ -15,6 +15,7 @@ function App() {
 
   useEffect(() => {
     const canvas = new Canvas(canvasRef.current);
+    canvas.preserveObjectStacking = true;
     resizeCanvas(canvas);
     setFabricCanvas(canvas);
     initShotty(canvas);
