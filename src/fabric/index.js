@@ -69,6 +69,7 @@ function createRectAtPointer(pointer) {
     ry: 10,
     strokeWidth: 4,
     stroke: "rgba(255,0,0,1)",
+    noScaleCache: false,
   });
 }
 
@@ -76,7 +77,7 @@ function createRectAtPointer(pointer) {
  * @param {Point} pointer
  */
 function createTextAtPointer(pointer) {
-  return new Textbox("", {
+  const text = new Textbox("", {
     left: pointer.x,
     top: pointer.y,
     fontSize: 20,
@@ -84,6 +85,11 @@ function createTextAtPointer(pointer) {
     width: 0,
     splitByGrapheme: true,
   });
+  text.setControlsVisibility({
+    mt: false,
+    mb: false,
+  });
+  return text;
 }
 
 /**
@@ -105,6 +111,11 @@ function startAddingText(canvas, afterAddCb) {
     creator: createTextAtPointer,
     postCreator: (text) => {
       text.enterEditing();
+      if (text.width < 100) {
+        text.set({
+          width: 100,
+        });
+      }
       afterAddCb();
     },
     cursor: "text",

@@ -2,7 +2,7 @@ import { Slider as AntdSlider, Button } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
 import { Popover } from "antd";
 export function Slider({ onChange, canvas, ...restProps }) {
-  const value = canvas.getActiveObject().get("rx") || 0;
+  const value = canvas.getActiveObject()?.get("rx") || 0;
   return (
     <Popover
       content={

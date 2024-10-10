@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { message } from "antd";
 import { saveShottyImage, dismissWindow } from "@/shotty";
+import { updateQuickBar } from "../store";
 
 function getCanvasBlob(canvas) {
   return new Promise(function (resolve, reject) {
@@ -16,14 +17,19 @@ export function useCanvasSave(canvas) {
   const handler = (e) => {
     if (e.metaKey && e.key === "s") {
       e.preventDefault();
-      const base64 = canvas.toDataURL({
+      const base64String = canvas.toDataURL({
         format: "png",
+        enableRetinaScaling: true,
       });
-      saveShottyImage(base64);
+      saveShottyImage({ base64String, closeWindow: true });
       message.success("导出成功");
-      dismissWindow();
     } else if (e.metaKey && e.key === "c") {
       e.preventDefault();
+      canvas.discardActiveObject();
+      canvas.renderAll();
+      updateQuickBar({
+        visible: false,
+      });
       navigator.clipboard
         .write([
           new ClipboardItem({

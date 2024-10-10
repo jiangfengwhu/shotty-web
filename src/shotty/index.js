@@ -15,8 +15,8 @@ function initShotty(canvas) {
   };
 }
 
-function saveShottyImage(base64) {
-  window.webkit.messageHandlers.saveBase64ImageHandler.postMessage?.(base64);
+function saveShottyImage(params) {
+  window.webkit.messageHandlers.saveBase64ImageHandler.postMessage?.(params);
 }
 
 function dismissWindow() {

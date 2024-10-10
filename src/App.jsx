@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { canvasContainer, toolbarContainer } from "./App.module.css";
 import { ToolBar } from "./components/toolbar/ToolBar.jsx";
 import { resizeCanvas } from "./fabric/index.js";
-import { useResize, useQuickBar } from "./hooks/fabric.js";
+import { useResize, useQuickBar, useObjResize } from "./hooks/fabric.js";
 import { useCanvasSave } from "./hooks/useKeyborad.js";
 import { initShotty } from "./shotty/index.js";
 import { Provider } from "jotai";
@@ -26,6 +26,7 @@ function App() {
   useResize(fabricCanvas);
   useCanvasSave(fabricCanvas);
   useQuickBar(fabricCanvas);
+  useObjResize(fabricCanvas);
   return (
     <div className={canvasContainer}>
       <canvas ref={canvasRef}></canvas>
