@@ -1,6 +1,5 @@
 import { useEffect } from "react";
-import { message } from "antd";
-import { saveShottyImage, dismissWindow } from "@/shotty";
+import { saveShottyImage, dismissWindow, showToast } from "@/shotty";
 import { updateQuickBar } from "../store";
 
 function getCanvasBlob(canvas) {
@@ -22,7 +21,7 @@ export function useCanvasSave(canvas) {
         enableRetinaScaling: true,
       });
       saveShottyImage({ base64String, closeWindow: true });
-      message.success("导出成功");
+      showToast({ message: "保存成功~" });
     } else if (e.metaKey && e.key === "c") {
       e.preventDefault();
       canvas.discardActiveObject();
@@ -37,12 +36,12 @@ export function useCanvasSave(canvas) {
           }),
         ])
         .then(() => {
-          message.success("复制成功");
+          showToast({ message: "复制成功~" });
           dismissWindow();
         })
         .catch((err) => {
           console.log(err, "zxzx");
-          message.error("复制失败");
+          showToast({ message: "复制失败" });
         });
     }
   };

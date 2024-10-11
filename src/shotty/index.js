@@ -15,6 +15,9 @@ function initShotty(canvas) {
   };
 }
 
+/**
+ * @param {base64String: string, closeWindow: boolean} params
+ */
 function saveShottyImage(params) {
   window.webkit.messageHandlers.saveBase64ImageHandler.postMessage?.(params);
 }
@@ -23,4 +26,11 @@ function dismissWindow() {
   window.webkit.messageHandlers.hideContentViewHandler.postMessage?.("z");
 }
 
-export { initShotty, saveShottyImage, dismissWindow };
+/**
+ * @param {message: string} params
+ */
+function showToast(params) {
+  window.webkit.messageHandlers.showToastHandler.postMessage?.(params);
+}
+
+export { initShotty, saveShottyImage, dismissWindow, showToast };

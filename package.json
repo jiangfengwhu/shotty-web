@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "build:shotty": "vite build --base='./'"
+    "build:shotty": "vite build --base='./' --outDir='shotty' && zip -r shotty.zip shotty"
   },
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
