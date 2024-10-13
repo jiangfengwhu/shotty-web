@@ -8,10 +8,13 @@ function setupWKWebViewJavascriptBridge(callback) {
 
 let jsBridge;
 
-function initJsBridge() {
-    setupWKWebViewJavascriptBridge((bridge) => {
-      jsBridge = bridge;
-    });
-  }
+function initJsBridge(callback) {
+    if (window.webkit) {
+        setupWKWebViewJavascriptBridge((bridge) => {
+            jsBridge = bridge;
+            callback?.(bridge);
+        });
+    }
+}
 
-  export { initJsBridge, jsBridge };
+export { initJsBridge, jsBridge };

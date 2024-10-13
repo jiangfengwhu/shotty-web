@@ -9,6 +9,8 @@ import { initShotty } from "./shotty/index.js";
 import { Provider } from "jotai";
 import { globalStore } from "./store/index.js";
 import { QuickBar } from "./components/quickbar";
+import { initJsBridge } from "./bridge/index.js";
+
 function App() {
   const canvasRef = useRef(null);
   const [fabricCanvas, setFabricCanvas] = useState(null);
@@ -18,7 +20,9 @@ function App() {
     canvas.preserveObjectStacking = true;
     resizeCanvas(canvas);
     setFabricCanvas(canvas);
-    initShotty(canvas);
+    initJsBridge(() => {
+      initShotty(canvas);
+    });
     return () => {
       canvas.dispose();
     };
