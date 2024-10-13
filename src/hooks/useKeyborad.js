@@ -21,7 +21,6 @@ export function useCanvasSave(canvas) {
         enableRetinaScaling: true,
       });
       saveShottyImage({ base64String, closeWindow: true });
-      showToast({ message: "保存成功~" });
     } else if (e.metaKey && e.key === "c") {
       e.preventDefault();
       canvas.discardActiveObject();
@@ -40,7 +39,6 @@ export function useCanvasSave(canvas) {
           dismissWindow();
         })
         .catch((err) => {
-          console.log(err, "zxzx");
           showToast({ message: "复制失败" });
         });
     }
