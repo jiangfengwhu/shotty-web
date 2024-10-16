@@ -17,21 +17,25 @@ function initShotty(canvas) {
 }
 
 /**
- * @param {base64String: string, closeWindow: boolean} params
+ * @param {Object} params - 参数对象
+ * @param {string} params.base64String - 要保存的base64字符串
+ * @param {boolean} params.closeWindow - 是否关闭窗口
  */
 function saveShottyImage(params) {
-  jsBridge.callHandler('saveBase64ImageCallback', params);
+  jsBridge.callHandler("saveBase64ImageCallback", params);
 }
 
 function dismissWindow() {
-  jsBridge.callHandler('hideContentViewCallback', {});
+  jsBridge.callHandler("hideContentViewCallback", {});
 }
 
 /**
- * @param {message: string} params
+ * 显示Toast消息
+ * @param {Object} params - 参数对象
+ * @param {string} params.message - 要显示的消息内容
  */
 function showToast(params) {
-  jsBridge.callHandler('showToastCallback', params);
+  jsBridge.callHandler("showToastCallback", params);
 }
 
 /**
@@ -39,7 +43,7 @@ function showToast(params) {
  * @param {function} callback
  */
 function performOCR(params, callback) {
-  jsBridge.callHandler('performOCRCallback', params, callback);
+  jsBridge.callHandler("performOCRCallback", params, callback);
 }
 
 export { initShotty, saveShottyImage, dismissWindow, showToast, performOCR };

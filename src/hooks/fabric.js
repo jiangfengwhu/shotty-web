@@ -87,7 +87,6 @@ export function useQuickBar(canvas) {
     if (!canvas) return;
     const updater = (e) => {
       const activeObject = canvas.getActiveObject();
-      console.log("zxzx activeObject", activeObject);
       if (!activeObject) return;
       const { left, top, height, scaleY } = activeObject;
       const quickBar = {
@@ -117,18 +116,20 @@ export function useObjResize(canvas) {
   useEffect(() => {
     if (!canvas) return;
     const handleObjResize = (event) => {
-      const obj = canvas.getActiveObject(),
-        width = obj.width,
-        height = obj.height,
-        scaleX = obj.scaleX,
-        scaleY = obj.scaleY;
+      if (event.target?.type === "rect") {
+        const obj = canvas.getActiveObject(),
+          width = obj.width,
+          height = obj.height,
+          scaleX = obj.scaleX,
+          scaleY = obj.scaleY;
 
-      obj.set({
-        width: width * scaleX,
-        height: height * scaleY,
-        scaleX: 1,
-        scaleY: 1,
-      });
+        obj.set({
+          width: width * scaleX,
+          height: height * scaleY,
+          scaleX: 1,
+          scaleY: 1,
+        });
+      }
     };
     canvas.on("object:scaling", handleObjResize);
     return () => {

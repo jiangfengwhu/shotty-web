@@ -5,6 +5,7 @@ import {
   Textbox,
   InteractiveFabricObject,
   PencilBrush,
+  ActiveSelection,
 } from "fabric";
 import { DEFAULT_COLOR } from "@/constants";
 
@@ -234,7 +235,7 @@ function fillColor(canvas, object, color, type = "fill") {
   object.set({
     [type]: color,
   });
-  canvas.renderAll();
+  canvas.requestRenderAll();
 }
 
 /**
@@ -246,7 +247,23 @@ function setBorderRadius(canvas, object, radius) {
     rx: radius,
     ry: radius,
   });
-  canvas.renderAll();
+  canvas.requestRenderAll();
+}
+
+/**
+ * @param {Canvas} canvas
+ */
+function getCurrentBase64(canvas) {
+  const object =
+    canvas.getActiveObject() ||
+    new ActiveSelection(canvas.getObjects(), { canvas });
+  canvas.setActiveObject(object);
+  const base64 = object.toDataURL({
+    format: "png",
+    enableRetinaScaling: true,
+  });
+  canvas.discardActiveObject();
+  return base64;
 }
 
 export {
@@ -263,4 +280,5 @@ export {
   sendToBack,
   fillColor,
   setBorderRadius,
+  getCurrentBase64,
 };

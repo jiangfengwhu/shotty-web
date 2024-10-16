@@ -1,30 +1,47 @@
-import { startAddingRect, startAddingText, startSelecting, startFreeDrawing, deleteObject, clearCanvas } from "@/fabric/index.js";
-import { FontSizeOutlined, BorderOutlined, EditOutlined, DragOutlined, DeleteOutlined, ClearOutlined } from '@ant-design/icons';
+import {
+  clearCanvas,
+  startAddingRect,
+  startAddingText,
+  startFreeDrawing,
+  startSelecting,
+} from "@/fabric/index.js";
+import {
+  BorderOutlined,
+  ClearOutlined,
+  DragOutlined,
+  EditOutlined,
+  FontSizeOutlined,
+} from "@ant-design/icons";
+
 export const toolBarConfig = {
-    select: {
-        icon: DragOutlined,
-        handler: startSelecting
-    },
-    text: {
-        icon: FontSizeOutlined,
-        handler: startAddingText
-    },
-    rect: {
-        icon: BorderOutlined,
-        handler: startAddingRect
-    },
-    freeDrawing: {
-        icon: EditOutlined,
-        handler: startFreeDrawing
-    }
-}
+  select: {
+    icon: DragOutlined,
+    handler: startSelecting,
+    tip: "选择",
+  },
+  text: {
+    icon: FontSizeOutlined,
+    handler: startAddingText,
+    tip: "文字",
+  },
+  rect: {
+    icon: BorderOutlined,
+    handler: startAddingRect,
+    tip: "矩形",
+  },
+  freeDrawing: {
+    icon: EditOutlined,
+    handler: startFreeDrawing,
+    tip: "画笔",
+  },
+};
 
 export const menuBarConfig = {
-    
-    clear: {
-        icon: ClearOutlined,
-        handler: clearCanvas
-    }
-}
+  clear: {
+    tip: "清空",
+    icon: ClearOutlined,
+    handler: clearCanvas,
+  },
+};
 export const toolBarKeys = Object.keys(toolBarConfig);
 export const menuBarKeys = Object.keys(menuBarConfig);

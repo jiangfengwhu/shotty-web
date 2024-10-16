@@ -1,37 +1,33 @@
 import { useEffect } from "react";
 import { saveShottyImage, dismissWindow, showToast } from "@/shotty";
 import { updateQuickBar } from "../store";
+import { Canvas } from "fabric";
+import { getCurrentBase64 } from "@/fabric/index.js";
+import { base64ToBlob } from "@/utils/index.js";
 
 function getCanvasBlob(canvas) {
-  return new Promise(function (resolve, reject) {
-    canvas.toBlob(function (blob) {
-      resolve(blob);
-    });
+  return new Promise(function (resolve) {
+    resolve(base64ToBlob(getCurrentBase64(canvas)));
   });
 }
 /**
- * @param {fabric.Canvas} canvas
+ * @param {Canvas} canvas
  */
 export function useCanvasSave(canvas) {
   const handler = (e) => {
     if (e.metaKey && e.key === "s") {
       e.preventDefault();
-      const base64String = canvas.toDataURL({
-        format: "png",
-        enableRetinaScaling: true,
-      });
+      const base64String = getCurrentBase64(canvas);
       saveShottyImage({ base64String, closeWindow: true });
     } else if (e.metaKey && e.key === "c") {
       e.preventDefault();
-      canvas.discardActiveObject();
-      canvas.renderAll();
       updateQuickBar({
         visible: false,
       });
       navigator.clipboard
         .write([
           new ClipboardItem({
-            "image/png": getCanvasBlob(canvas.getElement()),
+            "image/png": getCanvasBlob(canvas),
           }),
         ])
         .then(() => {
@@ -39,7 +35,7 @@ export function useCanvasSave(canvas) {
           dismissWindow();
         })
         .catch((err) => {
-          showToast({ message: "复制失败" });
+          showToast({ message: `复制失败，${err.message}` });
         });
     }
   };
